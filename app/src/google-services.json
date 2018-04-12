@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "617613538395",
+    "firebase_url": "https://smsse-ce9d6.firebaseio.com",
+    "project_id": "smsse-ce9d6",
+    "storage_bucket": "smsse-ce9d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617613538395:android:2bad61c62b8f763d",
+        "android_client_info": {
+          "package_name": "com.sms.sms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617613538395-3hdotshhvi8nu15909ra2toc36ibatjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCni2yrREKwgA8it0qRPKL6zYgOSTOjT60"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
