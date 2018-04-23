@@ -1,16 +1,20 @@
 <resources>
     <string name="app_name">SMS</string>
-    <string name="text_accounts">All Accounts</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Password</string>
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="text_login">Login</string>
     <string name="text_register">Register</string>
+
     <string name="success_message">Registration Successful</string>
     <string name="text_not_member">No account yet? Create one!</string>
     <string name="text_already_member">Already have an account? Sign in!</string>
     <string name="create_account">Create Account</string>
+    // Error checking
+    <string name="error_empty_input">This field is required</string>
     <string name="error_email_exists">Email Already Exists</string>
+    <string name="error_username_exists">Username Already Exists</string>
+    <string name="error_pwConfirmation_nonmatch">Password and Password Confirmation don\'t match</string>
     <string name="action_settings">Settings</string>
 
 </resources>
