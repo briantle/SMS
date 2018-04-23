@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
+    private final AppCompatActivity activity = RegisterActivity.this;
+
     private LinearLayout linearLayout;
     private TextInputLayout InputLayoutUsername;
     private TextInputLayout InputLayoutEmail;
@@ -22,6 +24,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private AppCompatButton btn_signup;
     private TextView link_login;
 
+    // Used to push data into the database
+    DatabaseManagement db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void InitActivity(){
         createView();
         createListeners();
+        db = new DatabaseManagement(activity);
     }
     private void createView(){
         linearLayout = findViewById(R.id.linearLayout);
@@ -51,13 +56,21 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btn_signup.setOnClickListener(this);
         link_login.setOnClickListener(this);
     }
+    private void getUserInfo(){
+        String userName = input_username.getText().toString().trim();
+        String password = input_password.getText().toString().trim();
+        String email = input_email.getText().toString().trim();
+    }
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
+        switch(view.getId())
+        {
             case R.id.btn_signup:
                 break;
             case R.id.link_login:
+                // This switches the view back to the login view
                 finish();
+                break;
         }
     }
 }

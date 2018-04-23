@@ -1,6 +1,7 @@
 package com.sms.sms;
 
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.widget.NestedScrollView;
@@ -55,6 +56,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.appCompatButtonLogin:
                 break;
             case R.id.textViewLinkRegister:
+                // Switches the view to the register activity view
+                Intent intentRegister = new Intent(getApplicationContext(), RegisterActivity.class);
+                startActivity(intentRegister);
                 break;
         }
     }
