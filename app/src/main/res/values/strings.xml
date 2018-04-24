@@ -11,6 +11,7 @@
     <string name="text_already_member">Already have an account? Sign in!</string>
     <string name="create_account">Create Account</string>
     // Error checking
+    <string name="error_invalid_login_info">Invalid Login Credentials</string>
     <string name="error_empty_input">This field is required</string>
     <string name="error_email_exists">Email Already Exists</string>
     <string name="error_username_exists">Username Already Exists</string>
