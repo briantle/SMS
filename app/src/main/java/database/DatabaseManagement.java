@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
-
 /******************************************************************************
  *
  *

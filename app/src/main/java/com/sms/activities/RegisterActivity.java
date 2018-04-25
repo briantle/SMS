@@ -10,7 +10,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import database.DatabaseManagement;
+import database.FirebaseHelper;
 import inputvalidation.InputErrorChecking;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
@@ -29,6 +33,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView link_login;
 
     // Used to push data into the database
+    private DatabaseReference databaseReference;
+    private FirebaseHelper firebaseHelper;
     private DatabaseManagement db;
     private InputErrorChecking iE;
     @Override
@@ -36,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         getSupportActionBar().hide();
+        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://smssoftware-5c2d1.firebaseio.com/users");
 
         InitActivity();
     }
@@ -44,6 +51,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         createListeners();
         db = new DatabaseManagement(activity);
         iE = new InputErrorChecking(activity);
+        firebaseHelper = new FirebaseHelper(activity);
     }
     private void createView(){
         linearLayout = findViewById(R.id.linearLayout);
@@ -84,21 +92,16 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         // Check if the username or email already exists in the database
         if (db.doesUserExist(userName)) {
-            // Snack Bar to show error message that record already exists
-            //Snackbar.make(linearLayout, getString(R.string.error_username_exists), Snackbar.LENGTH_LONG).show();
             InputLayoutUsername.setError(getString(R.string.error_username_exists));
             return;
         }
         else if (db.doesEmailExist(email)) {
-            // Snack Bar to show error message that record already exists
-            //Snackbar.make(linearLayout, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();
             InputLayoutEmail.setError(getString(R.string.error_email_exists));
             return;
         }
         else {
             // Otherwise, create the user and store data in database
-            db.createUser(userName, password, email);
-
+            firebaseHelper.addUser(userName, email, password);
             // Snack Bar to show success message that record saved successfully
             Snackbar.make(linearLayout, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
             resetText();
