@@ -2,8 +2,11 @@ package database;
 
 import android.content.Context;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import users.User;
 
@@ -17,12 +20,31 @@ public class FirebaseHelper
 
     /**
      *
-     * @param username
-     * @param email
-     * @param password
+     * @param user
      */
-    public void addUser(String username, String email, String password) {
-        User user = new User(username, email, password);
-        databaseReference.child("users").child(username).setValue(user);
+    public void addUser(User user) {
+        databaseReference.child("users").child(user.getUsername()).setValue(user);
+    }
+
+    /**
+     *
+     * @param email
+     * @param dataSnapshot
+     * @return
+     */
+    public boolean doesEmailExist(String email, DataSnapshot dataSnapshot)
+    {
+        // Iterate through the database
+        for (DataSnapshot snapshot: dataSnapshot.child("users").getChildren())
+        {
+            // Get the current user in the database
+            User databaseUser = snapshot.getValue(User.class);
+            // A user has already registered with that email
+            if (databaseUser.getEmail().equals(email)) {
+                return true;
+            }
+        }
+        // Nobody has registered with this email
+        return false;
     }
 }

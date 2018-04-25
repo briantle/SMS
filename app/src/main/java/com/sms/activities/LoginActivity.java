@@ -9,8 +9,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.TimeUtils;
 import android.view.View;
 import android.widget.EditText;
 
@@ -20,8 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import database.DatabaseManagement;
-import database.FirebaseHelper;
 import inputvalidation.InputErrorChecking;
 
 /**
@@ -30,8 +26,6 @@ import inputvalidation.InputErrorChecking;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
     private final AppCompatActivity activity = LoginActivity.this;
-    private DatabaseManagement myDb;
-    private FirebaseHelper fbHelper;
     private InputErrorChecking iE;
     private NestedScrollView nestedScrollView;
     private TextInputLayout textInputLayoutUsername;
@@ -52,27 +46,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         appCompatButtonLogin.setOnClickListener(this);
         textViewLinkRegister.setOnClickListener(this);
         databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://smssoftware-5c2d1.firebaseio.com/users");
-
-        // Set up database
-        myDb = new DatabaseManagement(activity);
-        fbHelper = new FirebaseHelper(activity);
         iE = new InputErrorChecking(activity);
     }
     private void getViewReference(){
-        nestedScrollView = (NestedScrollView) findViewById(R.id.nestedScrollView);
-        textInputLayoutUsername = (TextInputLayout) findViewById(R.id.textInputLayoutUsername);
-        textInputLayoutPassword = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
-        InputUserId = (EditText) findViewById(R.id.InputUserId);
-        InputPassword = (EditText) findViewById(R.id.InputPassword);
-        appCompatButtonLogin = (AppCompatButton) findViewById(R.id.appCompatButtonLogin);
-        textViewLinkRegister = (AppCompatTextView) findViewById(R.id.textViewLinkRegister);
+        nestedScrollView = findViewById(R.id.nestedScrollView);
+        textInputLayoutUsername = findViewById(R.id.textInputLayoutUsername);
+        textInputLayoutPassword = findViewById(R.id.textInputLayoutPassword);
+        InputUserId = findViewById(R.id.InputUserId);
+        InputPassword = findViewById(R.id.InputPassword);
+        appCompatButtonLogin = findViewById(R.id.appCompatButtonLogin);
+        textViewLinkRegister = findViewById(R.id.textViewLinkRegister);
     }
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
+        switch(view.getId())
+        {
+            // User clicked on sign in button
             case R.id.appCompatButtonLogin:
                 checkDatabase();
                 break;
+            // User clicked on register button
             case R.id.textViewLinkRegister:
                 // Switches the view to the register activity view
                 Intent intentRegister = new Intent(getApplicationContext(), RegisterActivity.class);
@@ -102,19 +95,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     startActivity(intentMainMenu);
                 }
                 // Found username but password is wrong
-                else if (snapshot.child("users").hasChild(username) && !snapshot.child("users").child(username).child("password").getValue().equals(password)){
+                else if (snapshot.child("users").hasChild(username) && !snapshot.child("users").child(username).child("password").getValue().equals(password))
                     Snackbar.make(nestedScrollView, getString(R.string.error_wrong_password), Snackbar.LENGTH_LONG).show();
-                }
-
                 // The user doesn't exist in database
-                else{
+                else
                     Snackbar.make(nestedScrollView, getString(R.string.error_user_doesnt_exist), Snackbar.LENGTH_LONG).show();
-                }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                throw databaseError.toException();
             }
         });
     }

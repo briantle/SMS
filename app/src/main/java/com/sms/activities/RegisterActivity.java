@@ -10,12 +10,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import database.DatabaseManagement;
 import database.FirebaseHelper;
 import inputvalidation.InputErrorChecking;
+import users.User;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
     private final AppCompatActivity activity = RegisterActivity.this;
@@ -35,7 +38,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     // Used to push data into the database
     private DatabaseReference databaseReference;
     private FirebaseHelper firebaseHelper;
-    private DatabaseManagement db;
     private InputErrorChecking iE;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void InitActivity(){
         createView();
         createListeners();
-        db = new DatabaseManagement(activity);
         iE = new InputErrorChecking(activity);
         firebaseHelper = new FirebaseHelper(activity);
     }
@@ -70,12 +71,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btn_signup.setOnClickListener(this);
         link_login.setOnClickListener(this);
     }
-    private void getUserInfo(){
-        String userName = input_username.getText().toString().trim();
-        String password = input_password.getText().toString().trim();
-        String passCombination = input_passwordConfirm.getText().toString().trim();
-        String email = input_email.getText().toString().trim();
-
+    private void getUserInfo()
+    {
         // Make sure the user fills the text fields in
         if (!iE.isTextBoxFilled(InputLayoutUsername, input_username, getString(R.string.error_empty_input)))
             return;
@@ -90,22 +87,35 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (!iE.doesConfirmationMatch(InputLayoutPw, input_password, input_passwordConfirm, getString(R.string.error_pwConfirmation_nonmatch)))
             return;
 
-        // Check if the username or email already exists in the database
-        if (db.doesUserExist(userName)) {
-            InputLayoutUsername.setError(getString(R.string.error_username_exists));
-            return;
-        }
-        else if (db.doesEmailExist(email)) {
-            InputLayoutEmail.setError(getString(R.string.error_email_exists));
-            return;
-        }
-        else {
-            // Otherwise, create the user and store data in database
-            firebaseHelper.addUser(userName, email, password);
-            // Snack Bar to show success message that record saved successfully
-            Snackbar.make(linearLayout, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-            resetText();
-        }
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot)
+            {
+                String username = input_username.getText().toString().trim();
+                String email = input_email.getText().toString().trim();
+                String password = input_password.getText().toString().trim();
+
+                // The username has already been taken
+                if (snapshot.child("users").hasChild(username))
+                    InputLayoutUsername.setError(getString(R.string.error_username_exists));
+                // A user has already registered with that email
+                else if (firebaseHelper.doesEmailExist(email, snapshot))
+                    InputLayoutEmail.setError(getString(R.string.error_email_exists));
+                // Otherwise, the user doesn't exist in the database so create that user
+                else {
+                    User newUser = new User(username, email, password);
+                    // Otherwise, create the user and store data in database
+                    firebaseHelper.addUser(newUser);
+                    // Snack Bar to show success message that record saved successfully
+                    Snackbar.make(linearLayout, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
+                    resetText();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
     @Override
     public void onClick(View view) {
