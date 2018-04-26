@@ -1,17 +1,26 @@
 package com.sms.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import database.DatabaseManagement;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import database.FirebaseHelper;
 import inputvalidation.InputErrorChecking;
+import users.User;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener{
     private final AppCompatActivity activity = RegisterActivity.this;
@@ -29,21 +38,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView link_login;
 
     // Used to push data into the database
-    private DatabaseManagement db;
+    private DatabaseReference databaseReference;
+    private FirebaseHelper firebaseHelper;
     private InputErrorChecking iE;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         getSupportActionBar().hide();
+        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://smssoftware-5c2d1.firebaseio.com/users");
 
         InitActivity();
     }
     private void InitActivity(){
         createView();
         createListeners();
-        db = new DatabaseManagement(activity);
         iE = new InputErrorChecking(activity);
+        firebaseHelper = new FirebaseHelper(activity);
     }
     private void createView(){
         linearLayout = findViewById(R.id.linearLayout);
@@ -62,50 +73,58 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         btn_signup.setOnClickListener(this);
         link_login.setOnClickListener(this);
     }
-    private void getUserInfo(){
-        String userName = input_username.getText().toString().trim();
-        String password = input_password.getText().toString().trim();
-        String passCombination = input_passwordConfirm.getText().toString().trim();
-        String email = input_email.getText().toString().trim();
-
+    private void getUserInfo()
+    {
         // Make sure the user fills the text fields in
-        if (!iE.isTextBoxFilled(InputLayoutUsername, input_username, getString(R.string.error_empty_input)))
+        if (!iE.isTextBoxFilled(InputLayoutUsername, input_username, getString(R.string.error_empty_input))
+         || !iE.isTextBoxFilled(InputLayoutEmail, input_email, getString(R.string.error_empty_input))
+         || !iE.isTextBoxFilled(InputLayoutPw, input_password, getString(R.string.error_empty_input))
+         || !iE.isTextBoxFilled(InputLayoutConfirmPw, input_passwordConfirm, getString(R.string.error_empty_input)))
             return;
-        if (!iE.isTextBoxFilled(InputLayoutEmail, input_email, getString(R.string.error_empty_input)))
+        // Check for valid email
+        if (!iE.isEmailValid(input_email.getText().toString().trim())) {
+            InputLayoutEmail.setError(getString(R.string.error_invalid_email));
             return;
-        if (!iE.isTextBoxFilled(InputLayoutPw, input_password, getString(R.string.error_empty_input)))
-            return;
-        if (!iE.isTextBoxFilled(InputLayoutConfirmPw, input_passwordConfirm, getString(R.string.error_empty_input)))
-            return;
-
+        }
         // Check if the password and password confirmation match
         if (!iE.doesConfirmationMatch(InputLayoutPw, input_password, input_passwordConfirm, getString(R.string.error_pwConfirmation_nonmatch)))
             return;
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot)
+            {
+                String username = input_username.getText().toString().trim().toLowerCase();
+                String email = input_email.getText().toString().trim();
+                String password = input_password.getText().toString().trim();
 
-        // Check if the username or email already exists in the database
-        if (db.doesUserExist(userName)) {
-            // Snack Bar to show error message that record already exists
-            //Snackbar.make(linearLayout, getString(R.string.error_username_exists), Snackbar.LENGTH_LONG).show();
-            InputLayoutUsername.setError(getString(R.string.error_username_exists));
-            return;
-        }
-        else if (db.doesEmailExist(email)) {
-            // Snack Bar to show error message that record already exists
-            //Snackbar.make(linearLayout, getString(R.string.error_email_exists), Snackbar.LENGTH_LONG).show();
-            InputLayoutEmail.setError(getString(R.string.error_email_exists));
-            return;
-        }
-        else {
-            // Otherwise, create the user and store data in database
-            db.createUser(userName, password, email);
-
-            // Snack Bar to show success message that record saved successfully
-            Snackbar.make(linearLayout, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-            resetText();
-        }
+                // The username has already been taken
+                if (snapshot.child("users").hasChild(username))
+                    InputLayoutUsername.setError(getString(R.string.error_username_exists));
+                // A user has already registered with that email
+                else if (firebaseHelper.doesEmailExist(email, snapshot))
+                    InputLayoutEmail.setError(getString(R.string.error_email_exists));
+                // Otherwise, the user doesn't exist in the database so create that user
+                else {
+                    User newUser = new User(username, email, password);
+                    // Otherwise, create the user and store data in database
+                    firebaseHelper.addUser(newUser);
+                    // Snack Bar to show success message that record saved successfully
+                    Snackbar.make(linearLayout, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
+                    resetText();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                throw databaseError.toException();
+            }
+        });
     }
     @Override
-    public void onClick(View view) {
+    public void onClick(View view)
+    {
+        // Hides the virtual keyboard from view after user clicks on a button
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
         switch(view.getId())
         {
             case R.id.btn_signup:
