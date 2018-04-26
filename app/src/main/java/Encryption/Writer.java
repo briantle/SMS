@@ -11,7 +11,7 @@ public class Writer {
 
         try {
             // just to test if functions work
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("output")));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("output.txt"),true));
 
             writer.write(input);
             writer.flush();
