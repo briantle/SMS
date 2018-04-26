@@ -1,11 +1,13 @@
 package com.sms.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -79,16 +81,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
          || !iE.isTextBoxFilled(InputLayoutPw, input_password, getString(R.string.error_empty_input))
          || !iE.isTextBoxFilled(InputLayoutConfirmPw, input_passwordConfirm, getString(R.string.error_empty_input)))
             return;
-
+        // Check for valid email
+        if (!iE.isEmailValid(input_email.getText().toString().trim())) {
+            InputLayoutEmail.setError(getString(R.string.error_invalid_email));
+            return;
+        }
         // Check if the password and password confirmation match
         if (!iE.doesConfirmationMatch(InputLayoutPw, input_password, input_passwordConfirm, getString(R.string.error_pwConfirmation_nonmatch)))
             return;
-
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot)
             {
-                String username = input_username.getText().toString().trim();
+                String username = input_username.getText().toString().trim().toLowerCase();
                 String email = input_email.getText().toString().trim();
                 String password = input_password.getText().toString().trim();
 
@@ -115,7 +120,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         });
     }
     @Override
-    public void onClick(View view) {
+    public void onClick(View view)
+    {
+        // Hides the virtual keyboard from view after user clicks on a button
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
         switch(view.getId())
         {
             case R.id.btn_signup:

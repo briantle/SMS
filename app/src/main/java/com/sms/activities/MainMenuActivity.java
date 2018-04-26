@@ -20,6 +20,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private TabItem chatTab;
     private TabItem contactsTab;
     private MenuItem logOut;
+    private MenuItem settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -34,6 +35,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         tabLayout = findViewById(R.id.tabLayout);
         chatTab = findViewById(R.id.chatTab);
         contactsTab = findViewById(R.id.contactsTab);
+        settings = findViewById(R.id.settings);
         logOut = findViewById(R.id.logOut);
     }
 
@@ -57,6 +59,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 Intent intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intentLogin);
                 return true;
+            case R.id.settings:
+                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intentSettings);
             default:
                 return super.onOptionsItemSelected(item);
         }

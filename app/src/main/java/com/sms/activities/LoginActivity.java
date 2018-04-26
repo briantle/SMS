@@ -1,4 +1,5 @@
 package com.sms.activities;
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +9,10 @@ import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private AppCompatButton appCompatButtonLogin;
     private AppCompatTextView textViewLinkRegister;
     private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -40,10 +44,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         getSupportActionBar().hide();
 
         getViewReference();
-        appCompatButtonLogin.setOnClickListener(this);
-        textViewLinkRegister.setOnClickListener(this);
-        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://smssoftware-5c2d1.firebaseio.com/users");
-        iE = new InputErrorChecking(activity);
+        initListeners();
+        initObjects();
     }
     private void getViewReference(){
         nestedScrollView = findViewById(R.id.nestedScrollView);
@@ -54,8 +56,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         appCompatButtonLogin = findViewById(R.id.appCompatButtonLogin);
         textViewLinkRegister = findViewById(R.id.textViewLinkRegister);
     }
+    private void initListeners(){
+        appCompatButtonLogin.setOnClickListener(this);
+        textViewLinkRegister.setOnClickListener(this);
+    }
+    private void initObjects(){
+        databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://smssoftware-5c2d1.firebaseio.com/users");
+        firebaseAuth = FirebaseAuth.getInstance();
+        iE = new InputErrorChecking(activity);
+    }
     @Override
-    public void onClick(View view) {
+    public void onClick(View view)
+    {
+        // Hides the virtual keyboard from view after user clicks on a button
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
         switch(view.getId())
         {
             // User clicked on sign in button
@@ -82,16 +97,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onDataChange(DataSnapshot snapshot)
             {
-                String username = InputUserId.getText().toString().trim();
+                String username = InputUserId.getText().toString().trim().toLowerCase();
                 String password = InputPassword.getText().toString().trim();
                 // Found the user
-                if (snapshot.child("users").hasChild(username) && snapshot.child("users").child(username).child("password").getValue().equals(password)) {
+                if (snapshot.hasChild(username) && snapshot.child(username).child("password").getValue().equals(password)) {
+                    resetText();
                     // Switches the view to the main menu activity view
                     Intent intentMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
                     startActivity(intentMainMenu);
                 }
                 // Found username but password is wrong
-                else if (snapshot.child("users").hasChild(username) && !snapshot.child("users").child(username).child("password").getValue().equals(password))
+                else if (snapshot.hasChild(username) && !snapshot.child(username).child("password").getValue().equals(password))
                     Snackbar.make(nestedScrollView, getString(R.string.error_wrong_password), Snackbar.LENGTH_LONG).show();
                 // The user doesn't exist in database
                 else
@@ -102,6 +118,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 throw databaseError.toException();
             }
         });
+    }
+    /**
+     * This method is to empty all input edit text
+     */
+    private void resetText() {
+        InputUserId.setText(null);
+        InputPassword.setText(null);
     }
 }
 

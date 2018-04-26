@@ -21,7 +21,7 @@ public class FirebaseHelper
      * @param user
      */
     public void addUser(User user) {
-        databaseReference.child("users").child(user.getUsername()).setValue(user);
+        databaseReference.child(user.getUsername()).setValue(user);
     }
 
     /**
@@ -33,7 +33,7 @@ public class FirebaseHelper
     public boolean doesEmailExist(String email, DataSnapshot dataSnapshot)
     {
         // Iterate through the database
-        for (DataSnapshot snapshot: dataSnapshot.child("users").getChildren())
+        for (DataSnapshot snapshot: dataSnapshot.getChildren())
         {
             // Get the current user in the database
             User databaseUser = snapshot.getValue(User.class);
