@@ -36,4 +36,15 @@ public class InputErrorChecking {
     public boolean isEmailValid(String email){
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+    public boolean isPasswordValid(TextInputLayout passwordLayout, EditText password, String[] errMsgArray){
+        if (password.getText().length() < 6){
+            passwordLayout.setError(errMsgArray[0]);
+            return false;
+        }
+        else if (!password.getText().toString().trim().matches(".*[0-9]+")){
+            passwordLayout.setError(errMsgArray[1]);
+            return false;
+        }
+        return true;
+    }
 }

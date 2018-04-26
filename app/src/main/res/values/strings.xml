@@ -17,6 +17,8 @@
     <string name="error_invalid_email">This email is invalid</string>
     <string name="error_email_exists">Email Already Exists</string>
     <string name="error_username_exists">Username Already Exists</string>
+    <string name="error_password_length">Password must be at least 6 characters long</string>
+    <string name="error_password_must_contain_numeric">Password must contain at least 1 numeric value</string>
     <string name="error_pwConfirmation_nonmatch">Password and Password Confirmation don\'t match</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_settings">Settings</string>

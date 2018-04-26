@@ -1,17 +1,25 @@
 package com.sms.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,22 +47,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     // Used to push data into the database
     private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
     private FirebaseHelper firebaseHelper;
     private InputErrorChecking iE;
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         getSupportActionBar().hide();
         databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://smssoftware-5c2d1.firebaseio.com/users");
+        firebaseAuth = FirebaseAuth.getInstance();
 
         InitActivity();
     }
     private void InitActivity(){
         createView();
         createListeners();
-        iE = new InputErrorChecking(activity);
-        firebaseHelper = new FirebaseHelper(activity);
+        initObjects();
     }
     private void createView(){
         linearLayout = findViewById(R.id.linearLayout);
@@ -68,13 +79,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         input_passwordConfirm = findViewById(R.id.input_passwordConfirm);
         btn_signup = findViewById(R.id.btn_signup);
         link_login = findViewById(R.id.link_login);
+
     }
     private void createListeners(){
         btn_signup.setOnClickListener(this);
         link_login.setOnClickListener(this);
     }
+    private void initObjects(){
+        progressDialog = new ProgressDialog(activity);
+        iE = new InputErrorChecking(activity);
+        firebaseHelper = new FirebaseHelper(activity);
+    }
     private void getUserInfo()
     {
+        String[] errMsgArray = {getString(R.string.error_password_length), getString(R.string.error_password_must_contain_numeric)};
         // Make sure the user fills the text fields in
         if (!iE.isTextBoxFilled(InputLayoutUsername, input_username, getString(R.string.error_empty_input))
          || !iE.isTextBoxFilled(InputLayoutEmail, input_email, getString(R.string.error_empty_input))
@@ -86,6 +104,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             InputLayoutEmail.setError(getString(R.string.error_invalid_email));
             return;
         }
+        // Check to see if password is valid (at least 6 characters, has at least 1 numeric value)
+        if (!iE.isPasswordValid(InputLayoutPw, input_password, errMsgArray))
+            return;
         // Check if the password and password confirmation match
         if (!iE.doesConfirmationMatch(InputLayoutPw, input_password, input_passwordConfirm, getString(R.string.error_pwConfirmation_nonmatch)))
             return;
@@ -93,24 +114,40 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onDataChange(DataSnapshot snapshot)
             {
-                String username = input_username.getText().toString().trim().toLowerCase();
+                final String username = input_username.getText().toString().trim().toLowerCase();
                 String email = input_email.getText().toString().trim();
-                String password = input_password.getText().toString().trim();
+                final String password = input_password.getText().toString().trim();
 
                 // The username has already been taken
-                if (snapshot.child("users").hasChild(username))
+                if (firebaseHelper.doesUserNameExist(username, snapshot))
                     InputLayoutUsername.setError(getString(R.string.error_username_exists));
                 // A user has already registered with that email
                 else if (firebaseHelper.doesEmailExist(email, snapshot))
                     InputLayoutEmail.setError(getString(R.string.error_email_exists));
                 // Otherwise, the user doesn't exist in the database so create that user
                 else {
-                    User newUser = new User(username, email, password);
-                    // Otherwise, create the user and store data in database
-                    firebaseHelper.addUser(newUser);
-                    // Snack Bar to show success message that record saved successfully
-                    Snackbar.make(linearLayout, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
-                    resetText();
+                    progressDialog.setMessage("Registering user....");
+                    progressDialog.show();
+
+                    firebaseAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task)
+                        {
+                            if (task.isSuccessful())
+                            {
+                                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                                firebaseHelper.addUser(firebaseUser.getUid(), username, firebaseUser.getEmail(), password);
+                                // Snack Bar to show success message that record saved successfully
+                                Snackbar.make(linearLayout, getString(R.string.success_message), Snackbar.LENGTH_LONG).show();
+                                resetText();
+                                progressDialog.hide();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Snackbar.make(linearLayout, "Authentication Failed", Snackbar.LENGTH_LONG).show();
+                            }
+                        }
+                    });
                 }
             }
             @Override

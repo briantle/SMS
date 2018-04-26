@@ -18,10 +18,14 @@ public class FirebaseHelper
 
     /**
      *
-     * @param user
+     * @param userId
+     * @param username
+     * @param email
+     * @param password
      */
-    public void addUser(User user) {
-        databaseReference.child(user.getUsername()).setValue(user);
+    public void addUser(String userId, String username, String email, String password) {
+        User user = new User(userId, username, email, password);
+        databaseReference.child(user.getUserId()).setValue(user);
     }
 
     /**
@@ -32,7 +36,7 @@ public class FirebaseHelper
      */
     public boolean doesEmailExist(String email, DataSnapshot dataSnapshot)
     {
-        // Iterate through the database
+        // Search through the database
         for (DataSnapshot snapshot: dataSnapshot.getChildren())
         {
             // Get the current user in the database
@@ -43,6 +47,21 @@ public class FirebaseHelper
             }
         }
         // Nobody has registered with this email
+        return false;
+    }
+    public boolean doesUserNameExist(String username, DataSnapshot dataSnapshot)
+    {
+        // Search through the database
+        for (DataSnapshot snapshot: dataSnapshot.getChildren())
+        {
+            // Get the current user in the database
+            User databaseUser = snapshot.getValue(User.class);
+            // A user has already registered with this username
+            if (databaseUser.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        // Nobody has registered with this username
         return false;
     }
 }

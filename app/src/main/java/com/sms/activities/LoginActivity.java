@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +21,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import inputvalidation.InputErrorChecking;
+import users.User;
+
 /**
  * A login screen that offers login via username/password.
  */
@@ -36,6 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private AppCompatTextView textViewLinkRegister;
     private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -61,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         textViewLinkRegister.setOnClickListener(this);
     }
     private void initObjects(){
+        progressBar = new ProgressBar(activity);
         databaseReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://smssoftware-5c2d1.firebaseio.com/users");
         firebaseAuth = FirebaseAuth.getInstance();
         iE = new InputErrorChecking(activity);
@@ -99,19 +104,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             {
                 String username = InputUserId.getText().toString().trim().toLowerCase();
                 String password = InputPassword.getText().toString().trim();
-                // Found the user
-                if (snapshot.hasChild(username) && snapshot.child(username).child("password").getValue().equals(password)) {
-                    resetText();
-                    // Switches the view to the main menu activity view
-                    Intent intentMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
-                    startActivity(intentMainMenu);
+                for (DataSnapshot dataSnapshot: snapshot.getChildren())
+                {
+                    User databaseUser = dataSnapshot.getValue(User.class);
+                    if (databaseUser.getUsername().matches(username) && databaseUser.getPassword().matches(password)) {
+                        // Found the user
+                        resetText();
+                        // Switches the view to the main menu activity view
+                        Intent intentMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
+                        startActivity(intentMainMenu);
+                    }
+                    // Found username but password is wrong
+                    else if (databaseUser.getUsername().matches(username) && !databaseUser.getPassword().matches(password))
+                        Snackbar.make(nestedScrollView, getString(R.string.error_wrong_password), Snackbar.LENGTH_LONG).show();
+                        // The user doesn't exist in database
+                    else
+                        Snackbar.make(nestedScrollView, getString(R.string.error_user_doesnt_exist), Snackbar.LENGTH_LONG).show();
                 }
-                // Found username but password is wrong
-                else if (snapshot.hasChild(username) && !snapshot.child(username).child("password").getValue().equals(password))
-                    Snackbar.make(nestedScrollView, getString(R.string.error_wrong_password), Snackbar.LENGTH_LONG).show();
-                // The user doesn't exist in database
-                else
-                    Snackbar.make(nestedScrollView, getString(R.string.error_user_doesnt_exist), Snackbar.LENGTH_LONG).show();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
