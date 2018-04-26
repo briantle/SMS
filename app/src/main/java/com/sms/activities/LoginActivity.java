@@ -1,6 +1,4 @@
 package com.sms.activities;
-
-
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import inputvalidation.InputErrorChecking;
-
 /**
  * A login screen that offers login via username/password.
  */
@@ -77,17 +74,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void checkDatabase()
     {
         // If the user left any of the text boxes blank
-        if (!iE.isTextBoxFilled(textInputLayoutUsername, InputUserId, getString(R.string.error_empty_input)))
-            return;
-        if (!iE.isTextBoxFilled(textInputLayoutPassword, InputPassword, getString(R.string.error_empty_input)))
+        if (!iE.isTextBoxFilled(textInputLayoutUsername, InputUserId, getString(R.string.error_empty_input))
+         || !iE.isTextBoxFilled(textInputLayoutPassword, InputPassword, getString(R.string.error_empty_input)))
             return;
 
-        final String username = InputUserId.getText().toString().trim();
-        final String password = InputPassword.getText().toString().trim();
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot)
             {
+                String username = InputUserId.getText().toString().trim();
+                String password = InputPassword.getText().toString().trim();
                 // Found the user
                 if (snapshot.child("users").hasChild(username) && snapshot.child("users").child(username).child("password").getValue().equals(password)) {
                     // Switches the view to the main menu activity view
@@ -101,7 +97,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else
                     Snackbar.make(nestedScrollView, getString(R.string.error_user_doesnt_exist), Snackbar.LENGTH_LONG).show();
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 throw databaseError.toException();

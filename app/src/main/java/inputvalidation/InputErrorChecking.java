@@ -29,7 +29,7 @@ public class InputErrorChecking {
         else {
             textLayout.setErrorEnabled(false);
         }
-            return true;
+        return true;
     }
     /******************************************
      *
@@ -52,7 +52,7 @@ public class InputErrorChecking {
      *
      * @param view
      */
-    private void hideKeyboardFrom(View view) {
+    public void hideKeyboardFrom(View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }

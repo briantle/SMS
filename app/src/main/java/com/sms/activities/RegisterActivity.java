@@ -74,13 +74,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private void getUserInfo()
     {
         // Make sure the user fills the text fields in
-        if (!iE.isTextBoxFilled(InputLayoutUsername, input_username, getString(R.string.error_empty_input)))
-            return;
-        if (!iE.isTextBoxFilled(InputLayoutEmail, input_email, getString(R.string.error_empty_input)))
-            return;
-        if (!iE.isTextBoxFilled(InputLayoutPw, input_password, getString(R.string.error_empty_input)))
-            return;
-        if (!iE.isTextBoxFilled(InputLayoutConfirmPw, input_passwordConfirm, getString(R.string.error_empty_input)))
+        if (!iE.isTextBoxFilled(InputLayoutUsername, input_username, getString(R.string.error_empty_input))
+         || !iE.isTextBoxFilled(InputLayoutEmail, input_email, getString(R.string.error_empty_input))
+         || !iE.isTextBoxFilled(InputLayoutPw, input_password, getString(R.string.error_empty_input))
+         || !iE.isTextBoxFilled(InputLayoutConfirmPw, input_passwordConfirm, getString(R.string.error_empty_input)))
             return;
 
         // Check if the password and password confirmation match
