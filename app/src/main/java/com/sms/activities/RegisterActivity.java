@@ -144,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 progressDialog.hide();
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Snackbar.make(linearLayout, "Authentication Failed", Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(linearLayout, "Failed to sign in user: " + username, Snackbar.LENGTH_LONG).show();
                             }
                         }
                     });

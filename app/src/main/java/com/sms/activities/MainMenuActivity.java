@@ -12,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "";
@@ -53,11 +55,11 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
 
-        switch (item.getItemId()) {
+        switch (item.getItemId())
+        {
             case R.id.logOut:
-                // Switches back to login screen
-                Intent intentLogin = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intentLogin);
+                FirebaseAuth.getInstance().signOut();
+                finish();
                 return true;
             case R.id.settings:
                 Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
