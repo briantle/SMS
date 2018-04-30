@@ -34,9 +34,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
     private void createViews(){
         linearLayout = findViewById(R.id.linearLayout);
-        tabLayout = findViewById(R.id.tabLayout);
-        chatTab = findViewById(R.id.chatTab);
-        contactsTab = findViewById(R.id.contactsTab);
         settings = findViewById(R.id.settings);
         logOut = findViewById(R.id.logOut);
     }
@@ -57,6 +54,9 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
 
         switch (item.getItemId())
         {
+            case R.id.composeMessage:
+                Intent intentSettings = new Intent(getApplicationContext(), MessageActivity.class);
+                startActivity(intentSettings);
             case R.id.logOut:
                 FirebaseAuth.getInstance().signOut();
                 finish();
