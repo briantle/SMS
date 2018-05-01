@@ -1,72 +1,76 @@
 package com.sms.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.AppCompatButton;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.MultiAutoCompleteTextView;
+import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import inputvalidation.InputErrorChecking;
+
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String TAG = "";
-    private LinearLayout linearLayout;
-    private TabLayout tabLayout;
-    private TabItem chatTab;
-    private TabItem contactsTab;
-    private MenuItem logOut;
-    private MenuItem settings;
+    private final AppCompatActivity activity = MessageActivity.this;
+    private Button sendMessage;
+    private MultiAutoCompleteTextView messageBox;
+    private CheckBox encryptionCheck;
+    private EditText keyInput;
+    private RelativeLayout relativeLayout;
+    private InputErrorChecking iE;
 
-
-    @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mainmenu);
         getSupportActionBar().hide();
 
         createViews();
+        initListeners();
+        iE = new InputErrorChecking(activity);
     }
     private void createViews(){
-        linearLayout = findViewById(R.id.linearLayout);
-        settings = findViewById(R.id.settings);
-        logOut = findViewById(R.id.logOut);
-    }
+        relativeLayout = findViewById(R.id.relativeLayout);
+        sendMessage = findViewById(R.id.sendMessage);
+        encryptionCheck = findViewById(R.id.encryptionCheck);
+        keyInput = findViewById(R.id.keyInput);
+        messageBox = findViewById(R.id.messageBox);
 
-    @Override
+    }
+    private void initListeners(){/*
+        sendMessage.setOnClickListener(this);
+        encryptionCheck.setOnClickListener(this);
+        keyInput.setOnClickListener(this);
+        messageBox.setOnClickListener(this);*/
+    }
     public void onClick(View view) {
-
-    }
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_option, menu);
-        return true;
-    }
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-
-        switch (item.getItemId())
-        {
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        switch (view.getId()) {
             case R.id.composeMessage:
-                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(intentSettings);
+                Intent intentMessage = new Intent(getApplicationContext(), MessageActivity.class);
+                startActivity(intentMessage);
             case R.id.logOut:
-                FirebaseAuth.getInstance().signOut();
+                //FirebaseAuth.getInstance().signOut();
                 finish();
-                return true;
             case R.id.settings:
                 Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intentSettings);
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 }
-}
+
