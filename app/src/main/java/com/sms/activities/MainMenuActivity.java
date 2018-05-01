@@ -2,27 +2,24 @@ package com.sms.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.AppCompatButton;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "";
-    private LinearLayout linearLayout;
-    private TabLayout tabLayout;
-    private TabItem chatTab;
-    private TabItem contactsTab;
-    private MenuItem logOut;
-    private MenuItem settings;
+    private RelativeLayout relativeLayout;
+    private Button composeMessage;
+    private AppCompatButton logOut;
+    private AppCompatButton settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -31,17 +28,36 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         getSupportActionBar().hide();
 
         createViews();
+        initListeners();
     }
     private void createViews(){
-        linearLayout = findViewById(R.id.linearLayout);
+        relativeLayout = findViewById(R.id.relativeLayout);
         settings = findViewById(R.id.settings);
         logOut = findViewById(R.id.logOut);
+        composeMessage = findViewById(R.id.composeMessage);
     }
-
+    private void initListeners(){
+        composeMessage.setOnClickListener(this);
+        logOut.setOnClickListener(this);
+        settings.setOnClickListener(this);
+    }
     @Override
     public void onClick(View view) {
-
-    }
+        switch(view.getId())
+        {
+            case R.id.composeMessage:
+                Intent intentMessage = new Intent(getApplicationContext(), MessageActivity.class);
+                startActivity(intentMessage);
+                break;
+            case R.id.logOut:
+                //FirebaseAuth.getInstance().signOut();
+                finish();
+            case R.id.settings:
+                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intentSettings);
+                break;
+        }
+    }/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
@@ -51,21 +67,21 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        Intent intentSettings;
+
         switch (item.getItemId())
         {
             case R.id.composeMessage:
-                intentSettings = new Intent(getApplicationContext(), MessageActivity.class);
-                startActivity(intentSettings);
+                Intent intentMessage = new Intent(getApplicationContext(), MessageActivity.class);
+                startActivity(intentMessage);
             case R.id.logOut:
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 return true;
             case R.id.settings:
-                intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intentSettings);
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
+    }*/
 }
