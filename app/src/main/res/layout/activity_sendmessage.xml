@@ -1,41 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/send"
         android:layout_width="385dp"
         android:layout_height="51dp"
         android:text="Send Message"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="240dp" />
+        app:layout_constraintBottom_toTopOf="@+id/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <MultiAutoCompleteTextView
         android:id="@+id/messageBox"
-        android:layout_width="384dp"
-        android:layout_height="202dp"
+        android:layout_width="385dp"
+        android:layout_height="108dp"
+        android:layout_marginBottom="16dp"
         android:text="MultiAutoCompleteTextView"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-5dp" />
-
-    <CheckBox
-        android:id="@+id/encryptionCheck"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:text="Encryption"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="198dp" />
+        app:layout_constraintBottom_toTopOf="@+id/encryptedMsg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editText"
-        android:layout_width="284dp"
-        android:layout_height="42dp"
+        android:id="@+id/secretKey"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Key"
-        tools:layout_editor_absoluteX="98dp"
-        tools:layout_editor_absoluteY="198dp" />
+        app:layout_constraintBottom_toTopOf="@+id/send"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/encryptedMsg"
+        android:layout_width="385dp"
+        android:layout_height="74dp"
+        android:layout_marginBottom="16dp"
+        android:text="Encrypted Message"
+        app:layout_constraintBottom_toTopOf="@+id/decryptedMsg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/decryptedMsg"
+        android:layout_width="385dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="16dp"
+        android:text="Decrypted Message"
+        app:layout_constraintBottom_toTopOf="@+id/secretKey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/senderNum"
+        android:layout_width="385dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="2dp"
+        android:text="Sender Number"
+        app:layout_constraintBottom_toTopOf="@+id/messageBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
