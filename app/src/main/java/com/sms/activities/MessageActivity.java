@@ -51,22 +51,21 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     }
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-
+        Intent intentSettings;
         switch (item.getItemId())
         {
             case R.id.composeMessage:
-                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+                intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intentSettings);
             case R.id.logOut:
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 return true;
             case R.id.settings:
-                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+                intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivity(intentSettings);
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-}
 }
