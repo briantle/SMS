@@ -65,10 +65,12 @@ public class ReceiveMessage extends AppCompatActivity implements View.OnClickLis
                 if(secretKeyStr.length() == 16){
                     try {
                         //Convert string to a byte array
-                        byte[] message = hexStringToByteArray(msgContent.getBytes().toString());
+                      //  byte[] message = hexStringToByteArray(new String(msgContent.getBytes()));
+                        byte[] message = hex2byte(msgContent.getBytes());
                         //Decrypt
-                        byte[] result = decrypt(secretKeyStr, message);
-                        decryptedMsg.setText(result.toString());
+                        byte[] result = decrypt(secretKey.getText().toString(), message);
+                        //byte[] result = decrypt(secretKeyStr, msgContent.getBytes());
+                        decryptedMsg.setText(new String(result));
 
                     } catch (Exception e) {
                         //If corrupted key, should be an error
@@ -95,6 +97,17 @@ public class ReceiveMessage extends AppCompatActivity implements View.OnClickLis
         return data;
     }
 
+    public static byte[] hex2byte(byte[] b) {
+
+        if ((b.length % 2) != 0)
+            throw new IllegalArgumentException("hello");
+        byte[] b2 = new byte[b.length / 2];
+        for (int n = 0; n < b.length; n += 2) {
+            String item = new String(b, n, 2);
+            b2[n / 2] = (byte) Integer.parseInt(item, 16);
+        }
+        return b2;
+    }
     @Override
     public void onClick(View view) {
 

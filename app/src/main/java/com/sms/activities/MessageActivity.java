@@ -112,8 +112,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     //sendMessage sends a message to a receiving number
 
     private void sendMessage(String recNumStr, String encryptedMsg){
-        String message = messageBox.getText().toString().trim();
-        String key = keyInput.getText().toString().trim();
         try {
             //Create smsManager client and send message via library function
             SmsManager smsManager = SmsManager.getDefault();
@@ -137,5 +135,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         }
         return str.toUpperCase();
     }
+
 }
 
