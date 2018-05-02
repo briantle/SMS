@@ -22,55 +22,64 @@ import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import database.FirebaseHelper;
 import inputvalidation.InputErrorChecking;
 
-public class MessageActivity extends AppCompatActivity implements View.OnClickListener {
+public class MessageActivity extends AppCompatActivity implements View.OnClickListener{
 
     private final AppCompatActivity activity = MessageActivity.this;
     private Button sendMessage;
     private MultiAutoCompleteTextView messageBox;
     private CheckBox encryptionCheck;
     private EditText keyInput;
+    private EditText recipientBox;
     private RelativeLayout relativeLayout;
     private InputErrorChecking iE;
+    private FirebaseHelper firebaseHelper;
 
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mainmenu);
+        setContentView(R.layout.activity_message);
         getSupportActionBar().hide();
 
         createViews();
         initListeners();
         iE = new InputErrorChecking(activity);
+        firebaseHelper = new FirebaseHelper(activity);
     }
-    private void createViews(){
+
+    private void createViews() {
         relativeLayout = findViewById(R.id.relativeLayout);
         sendMessage = findViewById(R.id.sendMessage);
         encryptionCheck = findViewById(R.id.encryptionCheck);
         keyInput = findViewById(R.id.keyInput);
         messageBox = findViewById(R.id.messageBox);
+        recipientBox = findViewById(R.id.recipientBox);
+    }
 
-    }
-    private void initListeners(){/*
-        sendMessage.setOnClickListener(this);
-        encryptionCheck.setOnClickListener(this);
-        keyInput.setOnClickListener(this);
-        messageBox.setOnClickListener(this);*/
-    }
-    public void onClick(View view) {
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
-        switch (view.getId()) {
-            case R.id.composeMessage:
-                Intent intentMessage = new Intent(getApplicationContext(), MessageActivity.class);
-                startActivity(intentMessage);
-            case R.id.logOut:
-                //FirebaseAuth.getInstance().signOut();
-                finish();
-            case R.id.settings:
-                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
-                startActivity(intentSettings);
+    public void onClick(View view)
+    {
+        // Hides the virtual keyboard from view after user clicks on a button
+        //InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+        switch(view.getId())
+        {
+            case R.id.messageBox:
+                sendMessage();
+                break;
+            case R.id.cancelButton:
+                // This switches the view back to the login view
+                Intent intentMainMenu = new Intent(getApplicationContext(), MainMenuActivity.class);
+                startActivity(intentMainMenu);
+                break;
         }
+    }
+    private void sendMessage(){
+        if (!iE.isTextBoxFilled(InputLayoutUsername, input_username, "")
+                || !iE.isTextBoxFilled( recipientBox, getString(R.string.error_empty_input))
+                || !iE.isTextBoxFilled(InputLayoutPw, input_password, getString(R.string.error_empty_input))
+                || !iE.isTextBoxFilled(InputLayoutConfirmPw, input_passwordConfirm, getString(R.string.error_empty_input)))
+            return;
     }
 }
 
