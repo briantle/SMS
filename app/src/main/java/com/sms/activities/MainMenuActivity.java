@@ -9,6 +9,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import java.util.Set;
+
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener{
 
     private static final String TAG = "";
@@ -39,11 +41,20 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         composeMessage.setOnClickListener(this);
         logOut.setOnClickListener(this);
         settings.setOnClickListener(this);
+        viewMessage.setOnClickListener(this);
     }
     @Override
     public void onClick(View view) {
         switch(view.getId())
         {
+            case R.id.settings:
+                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intentSettings);
+                break;
+            case R.id.viewMessage:
+                Intent intentViewMsgs = new Intent(getApplicationContext(), ReceiveMessage.class);
+                startActivity(intentViewMsgs);
+                break;
             case R.id.composeMessage:
                 Intent intentMessage = new Intent(getApplicationContext(), MessageActivity.class);
                 startActivity(intentMessage);
@@ -51,9 +62,6 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.logOut:
                 //FirebaseAuth.getInstance().signOut();
                 finish();
-            case R.id.viewMessage:
-                Intent intentSettings = new Intent(getApplicationContext(), ReceiveMessage.class);
-                startActivity(intentSettings);
                 break;
         }
     }/*

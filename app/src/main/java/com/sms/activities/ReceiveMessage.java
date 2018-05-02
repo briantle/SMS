@@ -48,7 +48,7 @@ public class ReceiveMessage extends AppCompatActivity implements View.OnClickLis
         else{
             //Was unable to retrieve intent
             Toast.makeText(getBaseContext(),"Error occured.", Toast.LENGTH_SHORT).show();
-            finish();
+            //finish();
         }
         //Make cancel exit
         cancel.setOnClickListener(new View.OnClickListener() {
