@@ -1,5 +1,6 @@
 package com.sms.activities;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +11,7 @@ import android.app.Activity;
 import static Encryption.encryptDecrypt.decrypt;
 
 
-public class ReceiveMessage extends Activity{
+public class ReceiveMessage extends AppCompatActivity implements View.OnClickListener{
     TextView senderNum;
     TextView encryptedMsg;
     TextView decryptedMsg;
@@ -37,7 +38,7 @@ public class ReceiveMessage extends Activity{
             //Retrieve sender phone number from extra
             originalNum = extras.getString("originalNum");
             //Retrieve encrypted message
-            msgContent = extras.getString("msgContent");
+            msgContent = extras.getString("message");
             //Set text fields in UI
             senderNum.setText(originalNum);
             encryptedMsg.setText(msgContent);
@@ -79,6 +80,7 @@ public class ReceiveMessage extends Activity{
             }
         });
 
+
     }
 
     public static byte[] hexStringToByteArray(String s) {
@@ -91,5 +93,9 @@ public class ReceiveMessage extends Activity{
         return data;
     }
 
+    @Override
+    public void onClick(View view) {
+
+    }
 }
 

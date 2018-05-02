@@ -50,7 +50,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 //FirebaseAuth.getInstance().signOut();
                 finish();
             case R.id.viewMessage:
-                Intent intentSettings = new Intent(getApplicationContext(), ReceiveActivity.class);
+                Intent intentSettings = new Intent(getApplicationContext(), ReceiveMessage.class);
                 startActivity(intentSettings);
                 break;
         }

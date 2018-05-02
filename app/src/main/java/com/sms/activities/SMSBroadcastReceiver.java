@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
-public class SMSBroadcastReceiver extends android.content.BroadcastReceiver{
+public class SMSBroadcastReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -29,7 +29,7 @@ public class SMSBroadcastReceiver extends android.content.BroadcastReceiver{
             sb.append(message);
             abortBroadcast();
         }
-        newIntent.putExtra("originNm", originNm);
+        newIntent.putExtra("originalNum", originNm);
         newIntent.putExtra("message", new String(sb));
         //Start the messageDisplay
         context.startActivity(newIntent);

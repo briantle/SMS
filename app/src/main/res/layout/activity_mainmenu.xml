@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:text="Compose Message" />
+        android:text="Compose Message"
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:id="@+id/settings"
@@ -20,7 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Settings" />
+        android:text="Settings"
+        android:layout_alignParentLeft="true" />
 
     <Button
         android:id="@+id/logOut"
@@ -28,20 +30,26 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="Log Out" />
+        android:text="Log Out"
+        android:layout_alignParentRight="true" />
 
     <Button
         android:id="@+id/viewMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Message" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="60dp"
+        android:text="View Message"
+        android:layout_alignParentLeft="true" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="417dp"
         android:layout_above="@+id/composeMessage"
         android:layout_alignParentStart="true"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:layout_alignParentLeft="true">
 
         <LinearLayout
             android:layout_width="match_parent"

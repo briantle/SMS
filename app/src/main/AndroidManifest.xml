@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -33,11 +35,13 @@
             android:name=".MessageActivity"
             android:label="SMS"></activity>
         <activity
-            android:name=".ReceiveActivity"
-            android:label="SMS"></activity>
-        <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
+        <receiver android:name=".SMSBroadcastReceiver" >
+            <intent-filter android:priority="1000" >
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
