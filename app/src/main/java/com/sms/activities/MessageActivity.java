@@ -7,6 +7,7 @@ import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.AppCompatButton;
+import android.telephony.SmsManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +22,8 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.RelativeLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
 
 import database.FirebaseHelper;
 import inputvalidation.InputErrorChecking;
@@ -63,7 +66,7 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         switch(view.getId())
         {
             case R.id.messageBox:
-                sendMessage();
+                //sendMessage();
                 break;
             case R.id.cancelButton:
                 // This switches the view back to the login view
@@ -72,10 +75,20 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
                 break;
         }
     }
-    private void sendMessage(){
+
+    //sendMessage sends a message to a receiving number
+
+    private void sendMessage(String recNumStr, String encryptedMsg){
         String message = messageBox.getText().toString().trim();
         String key = keyInput.getText().toString().trim();
-
+        try {
+            //Create smsManager client and send message via library function
+            SmsManager smsManager = SmsManager.getDefault();
+            ArrayList<String> parts = smsManager.divideMessage(encryptedMsg);
+            smsManager.sendMultipartTextMessage(recNumStr, null, parts, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 }
