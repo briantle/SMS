@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <uses-permission android:name="android.permission.READ_SMS"/>
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
     <application
         android:allowBackup="true"
@@ -40,8 +41,8 @@
         <activity android:name=".ReceiveMessage"
             android:label="ReceiveMessage"></activity>
 
-        <receiver android:name=".SMSBroadcastReceiver" >
-            <intent-filter android:priority="1000" >
+        <receiver android:name=".SMSBroadcastReceiver" android:permission="android.permission.BROADCAST_SMS" android:exported="true">
+            <intent-filter android:priority="2147483647" >
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>

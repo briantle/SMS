@@ -1,9 +1,13 @@
 package com.sms.activities;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -19,6 +23,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private AppCompatButton logOut;
     private AppCompatButton settings;
     private Button viewMessage;
+    private int MY_PERMISSIONS_REQUEST_SMS_RECEIVE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -26,9 +31,19 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_mainmenu);
         getSupportActionBar().hide();
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.RECEIVE_SMS},
+                MY_PERMISSIONS_REQUEST_SMS_RECEIVE);
 
         createViews();
         initListeners();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MY_PERMISSIONS_REQUEST_SMS_RECEIVE) {
+            Log.i("TAG", "MY_PERMISSIONS_REQUEST_SMS_RECEIVE --> YES");
+        }
     }
     private void createViews(){
         relativeLayout = findViewById(R.id.relativeLayout);
