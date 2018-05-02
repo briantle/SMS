@@ -30,6 +30,12 @@
             android:name=".MainMenuActivity"
             android:label="SMS"></activity>
         <activity
+            android:name=".MessageActivity"
+            android:label="SMS"></activity>
+        <activity
+            android:name=".ReceiveActivity"
+            android:label="SMS"></activity>
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"></activity>
     </application>
