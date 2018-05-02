@@ -13,6 +13,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.Set;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener{
@@ -75,7 +77,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(intentMessage);
                 break;
             case R.id.logOut:
-                //FirebaseAuth.getInstance().signOut();
+                FirebaseAuth.getInstance().signOut();
                 finish();
                 break;
         }
