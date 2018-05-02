@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="385dp"
+        android:layout_height="51dp"
+        android:text="Submit"
+        app:layout_constraintBottom_toTopOf="@+id/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/messageBox"
+        android:layout_width="385dp"
+        android:layout_height="108dp"
+        android:layout_marginBottom="16dp"
+        android:text="MultiAutoCompleteTextView"
+        app:layout_constraintBottom_toTopOf="@+id/encryptedMsg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/secretKey"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Key"
+        app:layout_constraintBottom_toTopOf="@+id/submit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="385dp"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/encryptedMsg"
+        android:layout_width="385dp"
+        android:layout_height="74dp"
+        android:layout_marginBottom="16dp"
+        android:text="Encrypted Message"
+        app:layout_constraintBottom_toTopOf="@+id/decryptedMsg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/decryptedMsg"
+        android:layout_width="385dp"
+        android:layout_height="75dp"
+        android:layout_marginBottom="16dp"
+        android:text="Decrypted Message"
+        app:layout_constraintBottom_toTopOf="@+id/secretKey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/senderNum"
+        android:layout_width="385dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="14dp"
+        android:layout_marginTop="2dp"
+        android:text="Sender Number"
+        app:layout_constraintBottom_toTopOf="@+id/messageBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</android.support.constraint.ConstraintLayout>

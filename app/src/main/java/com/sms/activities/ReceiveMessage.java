@@ -24,7 +24,7 @@ public class ReceiveMessage extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.onreceive);
+        setContentView(R.layout.activity_receivemessage);
         senderNum = (TextView) findViewById(R.id.senderNum);
         encryptedMsg = (TextView) findViewById(R.id.encryptedMsg);
         decryptedMsg = (TextView) findViewById(R.id.decryptedMsg);
