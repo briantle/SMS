@@ -160,8 +160,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view)
     {
         // Hides the virtual keyboard from view after user clicks on a button
-        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
+       // InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+       // inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
         switch(view.getId())
         {
             case R.id.btn_signup:
