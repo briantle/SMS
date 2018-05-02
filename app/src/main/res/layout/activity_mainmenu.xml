@@ -30,6 +30,12 @@
         android:layout_alignParentTop="true"
         android:text="Log Out" />
 
+    <Button
+        android:id="@+id/viewMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Message" />
+
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="417dp"
@@ -40,7 +46,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical" >
+
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>
