@@ -4,14 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 public class MainMenuActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -32,7 +27,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
     private void createViews(){
         relativeLayout = findViewById(R.id.relativeLayout);
-        settings = findViewById(R.id.settings);
+        settings = findViewById(R.id.receiveMessage);
         logOut = findViewById(R.id.logOut);
         composeMessage = findViewById(R.id.composeMessage);
     }
@@ -52,8 +47,8 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.logOut:
                 //FirebaseAuth.getInstance().signOut();
                 finish();
-            case R.id.settings:
-                Intent intentSettings = new Intent(getApplicationContext(), SettingsActivity.class);
+            case R.id.receiveMessage:
+                Intent intentSettings = new Intent(getApplicationContext(), ReceiveActivity.class);
                 startActivity(intentSettings);
                 break;
         }
