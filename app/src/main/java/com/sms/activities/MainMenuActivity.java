@@ -15,6 +15,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     private Button composeMessage;
     private AppCompatButton logOut;
     private AppCompatButton settings;
+    private Button viewMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -27,9 +28,10 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
     }
     private void createViews(){
         relativeLayout = findViewById(R.id.relativeLayout);
-        settings = findViewById(R.id.receiveMessage);
+        settings = findViewById(R.id.settings);
         logOut = findViewById(R.id.logOut);
         composeMessage = findViewById(R.id.composeMessage);
+        viewMessage = findViewById(R.id.viewMessage);
     }
     private void initListeners(){
         composeMessage.setOnClickListener(this);
@@ -47,7 +49,7 @@ public class MainMenuActivity extends AppCompatActivity implements View.OnClickL
             case R.id.logOut:
                 //FirebaseAuth.getInstance().signOut();
                 finish();
-            case R.id.receiveMessage:
+            case R.id.viewMessage:
                 Intent intentSettings = new Intent(getApplicationContext(), ReceiveActivity.class);
                 startActivity(intentSettings);
                 break;
