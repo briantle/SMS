@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 
 import database.FirebaseHelper;
 import inputvalidation.InputErrorChecking;
+
+import static Encryption.encryptDecrypt.encryptSMS;
 
 public class MessageActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -39,12 +42,13 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private RelativeLayout relativeLayout;
     private InputErrorChecking iE;
     private FirebaseHelper firebaseHelper;
+    private Button cancel;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
         getSupportActionBar().hide();
-
         createViews();
         iE = new InputErrorChecking(activity);
         firebaseHelper = new FirebaseHelper(activity);
@@ -56,6 +60,33 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         keyInput = findViewById(R.id.keyInput);
         messageBox = findViewById(R.id.messageBox);
         recipientBox = findViewById(R.id.recipientBox);
+        cancel = findViewById(R.id.cancelButton);
+
+        cancel.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                finish();
+            }
+        });
+
+        sendMessage.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                String recNumStr = recipientBox.getText().toString();
+                String secretKey = keyInput.getText().toString();
+                String msgContentStr = messageBox.getText().toString();
+                if(recNumStr.length() > 0 && secretKey.length() == 16 &&
+                        msgContentStr.length() > 0){
+                    byte[] encryptedMsg = encryptSMS(secretKey, msgContentStr);
+                    String msgString = byte2hex(encryptedMsg);
+                    sendMessage(recNumStr, msgString);
+                    finish();
+                }
+                else {
+                    Toast.makeText(getBaseContext(), "Please enter number," +
+                            "16 character encryption key, and message.",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     public void onClick(View view)
@@ -90,6 +121,19 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
         }
 
+    }
+
+    public static String byte2hex(byte[] b) {
+        String str = "";
+        String stmp = "";
+        for (int i = 0; i < b.length; i++) {
+            stmp = Integer.toHexString(b[i] & 0xFF);
+            if (stmp.length() == 1)
+                str += ("0" + stmp);
+            else
+                str += stmp;
+        }
+        return str.toUpperCase();
     }
 }
 
