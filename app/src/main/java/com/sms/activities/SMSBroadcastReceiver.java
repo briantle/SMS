@@ -15,7 +15,7 @@ public class SMSBroadcastReceiver extends android.content.BroadcastReceiver{
         if (objects != null) {
             sms = new SmsMessage[objects.length];
         }
-        Intent newIntent = new Intent(context, MessageActivity.class);
+        Intent newIntent = new Intent(context, ReceiveMessage.class);
         newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         newIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         String message;
