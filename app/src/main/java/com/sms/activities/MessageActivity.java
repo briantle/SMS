@@ -19,17 +19,6 @@ import android.widget.LinearLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RelativeLayout;
-import java.security.Key;
-import java.util.ArrayList;
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-import android.app.Activity;
-import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -54,7 +43,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         getSupportActionBar().hide();
 
         createViews();
-        initListeners();
         iE = new InputErrorChecking(activity);
         firebaseHelper = new FirebaseHelper(activity);
     }
@@ -62,7 +50,6 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
     private void createViews() {
         relativeLayout = findViewById(R.id.relativeLayout);
         sendMessage = findViewById(R.id.sendMessage);
-        encryptionCheck = findViewById(R.id.encryptionCheck);
         keyInput = findViewById(R.id.keyInput);
         messageBox = findViewById(R.id.messageBox);
         recipientBox = findViewById(R.id.recipientBox);
@@ -86,11 +73,10 @@ public class MessageActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
     private void sendMessage(){
-        if (!iE.isTextBoxFilled(InputLayoutUsername, input_username, "")
-                || !iE.isTextBoxFilled( recipientBox, getString(R.string.error_empty_input))
-                || !iE.isTextBoxFilled(InputLayoutPw, input_password, getString(R.string.error_empty_input))
-                || !iE.isTextBoxFilled(InputLayoutConfirmPw, input_passwordConfirm, getString(R.string.error_empty_input)))
-            return;
+        String message = messageBox.getText().toString().trim();
+        String key = keyInput.getText().toString().trim();
+
+
     }
 }
 
